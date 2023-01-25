@@ -26,6 +26,7 @@ namespace MixERP.Net.WebControls.ReportEngine.Data.Connection
             connectionStringBuilder.Database = database;
             connectionStringBuilder.UserName = userName;
             connectionStringBuilder.Password = password;
+            connectionStringBuilder.Port = 5432;
 
             return connectionStringBuilder.ConnectionString;
         }

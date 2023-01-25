@@ -20,6 +20,7 @@ namespace MixERP.Net.DBFactory
             connectionStringBuilder.Database = ConfigurationManager.AppSettings["Database"];
             connectionStringBuilder.UserName = ConfigurationManager.AppSettings["UserId"];
             connectionStringBuilder.Password = ConfigurationManager.AppSettings["Password"];
+            connectionStringBuilder.Port = 5432;
 
             return connectionStringBuilder.ConnectionString;
         }
