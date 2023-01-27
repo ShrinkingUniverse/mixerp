@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using MixERP.Net.DBFactory.EF.Models;
 
-namespace MixERP.Net.DBFactory.EF.Models;
+namespace MixERP.Net.DBFactory.EF.Context;
 
 public partial class MixerpContext : DbContext
 {

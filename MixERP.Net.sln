@@ -61,7 +61,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixERP.Net.WebControls.Tran
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixERP.Net.WebControls.StockTransactionView.Data", "Controls\WebControls\MixERP.Net.WebControls.StockTransactionView.Data\MixERP.Net.WebControls.StockTransactionView.Data.csproj", "{F8499D93-CED5-4A3D-A22B-CF21171EDE6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixERP.Net.DBFactory.EF", "MixERP.Net.DBFactory.EF\MixERP.Net.DBFactory.EF.csproj", "{691776DD-A50E-43AE-92A4-16D739C3966D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MixERP.Net.DBFactory.EF", "MixERP.Net.DBFactory.EF\MixERP.Net.DBFactory.EF.csproj", "{691776DD-A50E-43AE-92A4-16D739C3966D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixERP.Net.DatabaseLayer.EF", "MixERP.Net.DatabaseLayer.EF\MixERP.Net.DatabaseLayer.EF.csproj", "{3A6449F2-3B6F-4975-9C87-3A5561323425}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -487,6 +489,30 @@ Global
 		{691776DD-A50E-43AE-92A4-16D739C3966D}.Release-net40|Any CPU.Build.0 = Release|Any CPU
 		{691776DD-A50E-43AE-92A4-16D739C3966D}.Release-net45|Any CPU.ActiveCfg = Release|Any CPU
 		{691776DD-A50E-43AE-92A4-16D739C3966D}.Release-net45|Any CPU.Build.0 = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net20|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net20|Any CPU.Build.0 = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net35|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net35|Any CPU.Build.0 = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net40|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net40|Any CPU.Build.0 = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net45|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Debug-net45|Any CPU.Build.0 = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Mono-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Mono-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Mono-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Mono-Release|Any CPU.Build.0 = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net20|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net20|Any CPU.Build.0 = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net35|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net35|Any CPU.Build.0 = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net40|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net40|Any CPU.Build.0 = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net45|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6449F2-3B6F-4975-9C87-3A5561323425}.Release-net45|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -517,6 +543,7 @@ Global
 		{3E6AA330-1D6A-450C-9917-3ABC2222EC74} = {F882C837-D33A-43DE-8CEA-87D0CE635E9D}
 		{F8499D93-CED5-4A3D-A22B-CF21171EDE6B} = {F882C837-D33A-43DE-8CEA-87D0CE635E9D}
 		{691776DD-A50E-43AE-92A4-16D739C3966D} = {ADD35728-15DC-4939-98B8-2823E6F22E8A}
+		{3A6449F2-3B6F-4975-9C87-3A5561323425} = {ADD35728-15DC-4939-98B8-2823E6F22E8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DB7AE375-BD3E-4C77-9258-96357D771035}
