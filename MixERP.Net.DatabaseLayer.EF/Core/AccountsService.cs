@@ -2,7 +2,7 @@
 
 namespace MixERP.Net.DatabaseLayer.EF.Core
 {
-    public class AccountsService
+    public class AccountsService : IAccountsService
     {
         public bool IsCashAccount(int accountId)
         {

@@ -5,8 +5,12 @@ using System.Collections.ObjectModel;
 
 namespace MixERP.Net.DatabaseLayer.EF.Core
 {
-    public class FlagsService
+    public class FlagsService : IFlagsService
     {
+        public FlagsService()
+        {
+
+        }
         public void CreateFlag(int userId, int flagTypeId, string resourceName, string resourceKey,
             Collection<int> resourceIds)
         {
@@ -35,7 +39,6 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
             {
                 return;
             }
-            //
             const string sql = "SELECT core.create_flag(@UserId, @FlagTypeId, @Resource, @ResourceKey, @ResourceId);";
             foreach (int resourceId in resourceIds)
             {
@@ -54,7 +57,6 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
                     var accounts = db.Database.ExecuteSqlRawAsync(sql, parms);
                 }
             }
-            //
         }
     }
 }
