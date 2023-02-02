@@ -1,4 +1,6 @@
 ﻿using MixERP.Net.DatabaseLayer.EF.Core;
+using MixERP.Net.DBFactory.EF.Context;
+using Moq;
 using NUnit.Framework;
 
 namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
@@ -7,10 +9,12 @@ namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
     public class AccountServiceTest
     {
         private IAccountsService _accountsService;
+        private Mock<IMixerpContext> _mixerpContextMock;
         [SetUp]
         public void Setup()
         {
-            _accountsService = new AccountsService();
+            _mixerpContextMock = new Mock<IMixerpContext>();
+            _accountsService = new AccountsService(_mixerpContextMock.Object);
         }
 
         [Test]

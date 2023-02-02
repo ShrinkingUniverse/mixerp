@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using MixERP.Net.DBFactory.EF.Models;
 
 namespace MixERP.Net.DBFactory.EF.Context;
 
-public partial class MixerpContext : DbContext
+public partial class MixerpContext : DbContext, IMixerpContext
 {
     public MixerpContext()
     {
@@ -3006,5 +3007,9 @@ public partial class MixerpContext : DbContext
         OnModelCreatingPartial(modelBuilder);
     }
 
+    public virtual async Task<int> ExecuteSqlRawAsync(MixerpContext context, string sql, CancellationToken cancellationToken)
+    {
+        return await context.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+    }
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

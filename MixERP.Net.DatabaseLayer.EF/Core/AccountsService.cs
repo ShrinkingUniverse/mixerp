@@ -4,22 +4,21 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
 {
     public class AccountsService : IAccountsService
     {
+        private readonly IMixerpContext _mixerpContext;
+        public AccountsService(IMixerpContext mixerpContext)
+        {
+            _mixerpContext = mixerpContext;
+        }
         public bool IsCashAccount(int accountId)
         {
-            using (var db = new MixerpContext())
-            {
-                var accounts = db.Accounts.Where(a => a.AccountId == accountId).FirstOrDefault();
+                var accounts = _mixerpContext.Accounts.Where(a => a.AccountId == accountId).FirstOrDefault();
                 return accounts != null;
-            }
         }
 
         public bool IsCashAccount(string accountCode)
         {
-            using (var db = new MixerpContext())
-            {
-                var accounts = db.Accounts.Where(a => String.Compare(a.AccountCode, accountCode) == 0).FirstOrDefault();
+                var accounts = _mixerpContext.Accounts.Where(a => String.Compare(a.AccountCode, accountCode) == 0).FirstOrDefault();
                 return accounts != null;
-            }
         }
     }
 }

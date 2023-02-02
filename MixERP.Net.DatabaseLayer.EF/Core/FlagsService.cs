@@ -7,9 +7,10 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
 {
     public class FlagsService : IFlagsService
     {
-        public FlagsService()
+        private readonly IMixerpContext _mixerpContext;
+        public FlagsService(IMixerpContext mixerpContext)
         {
-
+            _mixerpContext = mixerpContext; 
         }
         public void CreateFlag(int userId, int flagTypeId, string resourceName, string resourceKey,
             Collection<int> resourceIds)
