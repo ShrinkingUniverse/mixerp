@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MixERP.Net.DBFactory.EF.Models;
+using Npgsql;
 
 namespace MixERP.Net.DBFactory.EF.Context
 {
@@ -92,5 +93,7 @@ namespace MixERP.Net.DBFactory.EF.Context
         DbSet<WorkCenterView> WorkCenterViews { get; set; }
 
         Task<int> ExecuteSqlRawAsync(MixerpContext context, string sql, CancellationToken cancellationToken);
+
+        Task<int> ExecuteSqlRawAsync(MixerpContext context, string sql, List<NpgsqlParameter> parameters);
     }
 }

@@ -22,7 +22,7 @@ namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
         }
 
         [Test]
-        public void CreateFlag_WrongUserId_Returned()
+        public void CreateFlag_WrongUserId_CreateFlagWasntСalled()
         {
             Collection<int> ids = new Collection<int>()
             {
@@ -34,9 +34,44 @@ namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
             int userId = -30;
             int flagTypeId = 6;
             List<NpgsqlParameter> parms = new List<NpgsqlParameter>{ };
-            _flagsService.CreateFlag(userId, flagTypeId, "", "", ids);
-            _mixerpContextMock.Setup(_ => _.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql).Result).Returns(2);
-            _mixerpContextMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql).Result, Times.Never());
+            _flagsService.CreateFlag(userId, flagTypeId, "Test", "Test", ids);
+            _mixerpContextMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, new CancellationToken()).Result, Times.Never());
+        }
+
+        [Test]
+        public void CreateFlag_NullResourceName_CreateFlagWasntСalled()
+        {
+            Collection<int> ids = new Collection<int>()
+            {
+                2,
+                3,
+                5
+            };
+            const string sql = "SELECT core.create_flag(@UserId, @FlagTypeId, @Resource, @ResourceKey, @ResourceId)";
+            int userId = 30;
+            int flagTypeId = 6;
+            List<NpgsqlParameter> parms = new List<NpgsqlParameter> { };
+            _flagsService.CreateFlag(userId, flagTypeId, "", "Test", ids);
+            _mixerpContextMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, new CancellationToken()).Result, Times.Never());
+        }
+
+        [Test]
+        public void CreateFlag_ParamsAreOk_CreateFlagWasntСalled()
+        {
+            Collection<int> ids = new Collection<int>()
+            {
+                2,
+                3,
+                5
+            };
+            const string sql = "SELECT core.create_flag(@UserId, @FlagTypeId, @Resource, @ResourceKey, @ResourceId)";
+            int userId = 30;
+            int flagTypeId = 6;
+            List<NpgsqlParameter> parms = new List<NpgsqlParameter> { };
+            _mixerpContextMock.Setup(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms).Result).Returns(3);
+            _flagsService.CreateFlag(userId, flagTypeId, "Test", "Test", ids);
+            _mixerpContextMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms), Times.Once());
+            _mixerpContextMock.Setup(s => s.Database.CloseConnection());
         }
     }
 }

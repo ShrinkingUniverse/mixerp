@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using MixERP.Net.DBFactory.EF.Models;
+using Npgsql;
 
 namespace MixERP.Net.DBFactory.EF.Context;
 
@@ -3010,6 +3011,11 @@ public partial class MixerpContext : DbContext, IMixerpContext
     public virtual async Task<int> ExecuteSqlRawAsync(MixerpContext context, string sql, CancellationToken cancellationToken)
     {
         return await context.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+    }
+
+    public virtual async Task<int> ExecuteSqlRawAsync(MixerpContext context, string sql, List<NpgsqlParameter> parameters)
+    {
+        return await context.Database.ExecuteSqlRawAsync(sql, parameters);
     }
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

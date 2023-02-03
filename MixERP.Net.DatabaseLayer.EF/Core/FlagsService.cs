@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MixERP.Net.DBFactory.EF.Context;
+﻿using MixERP.Net.DBFactory.EF.Context;
 using Npgsql;
 using System.Collections.ObjectModel;
 
@@ -53,10 +52,7 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
                     new NpgsqlParameter { ParameterName = "@ResourceId", Value = resourceId }
 
                 };
-                using (var db = new MixerpContext())
-                {
-                    var accounts = db.Database.ExecuteSqlRawAsync(sql, parms);
-                }
+                    var accounts = _mixerpContext.ExecuteSqlRawAsync((MixerpContext)_mixerpContext, sql, parms);
             }
         }
     }
