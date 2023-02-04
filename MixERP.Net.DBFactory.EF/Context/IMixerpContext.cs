@@ -91,9 +91,5 @@ namespace MixERP.Net.DBFactory.EF.Context
         DbSet<VoucherVerificationPolicyView> VoucherVerificationPolicyViews { get; set; }
         DbSet<WorkCenter> WorkCenters { get; set; }
         DbSet<WorkCenterView> WorkCenterViews { get; set; }
-
-        Task<int> ExecuteSqlRawAsync(MixerpContext context, string sql, CancellationToken cancellationToken);
-
-        Task<int> ExecuteSqlRawAsync(MixerpContext context, string sql, List<NpgsqlParameter> parameters);
     }
 }

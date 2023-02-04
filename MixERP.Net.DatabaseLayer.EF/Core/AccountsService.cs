@@ -11,8 +11,7 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
         }
         public bool IsCashAccount(int accountId)
         {
-                var accounts = _mixerpContext.Accounts.Where(a => a.AccountId == accountId).FirstOrDefault();
-                return accounts != null;
+                return _mixerpContext.Accounts.Where(a => a.AccountId == accountId).FirstOrDefault() != null;
         }
 
         public bool IsCashAccount(string accountCode)

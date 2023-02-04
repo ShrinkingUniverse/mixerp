@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MixERP.Net.DatabaseLayer.EF.Core;
+﻿using MixERP.Net.DatabaseLayer.EF.Core;
 using MixERP.Net.DBFactory.EF.Context;
 using Moq;
 using Npgsql;
@@ -13,12 +12,14 @@ namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
     {
         private IFlagsService _flagsService;
         private Mock<MixerpContext> _mixerpContextMock;
+        private Mock<IProcedureExecutor> _procedureExecutorMock;
 
         [SetUp]
         public void Setup()
         {
             _mixerpContextMock = new Mock<MixerpContext>();
-            _flagsService = new FlagsService(_mixerpContextMock.Object);
+            _procedureExecutorMock = new Mock<IProcedureExecutor>();
+            _flagsService = new FlagsService(_mixerpContextMock.Object, _procedureExecutorMock.Object);
         }
 
         [Test]
@@ -33,9 +34,9 @@ namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
             const string sql = "SELECT core.create_flag(@UserId, @FlagTypeId, @Resource, @ResourceKey, @ResourceId)";
             int userId = -30;
             int flagTypeId = 6;
-            List<NpgsqlParameter> parms = new List<NpgsqlParameter>{ };
-            _flagsService.CreateFlag(userId, flagTypeId, "Test", "Test", ids);
-            _mixerpContextMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, new CancellationToken()).Result, Times.Never());
+            List<NpgsqlParameter> parms = new List<NpgsqlParameter> { };
+            var result = _flagsService.CreateFlag(userId, flagTypeId, "Test", "Test", ids).Result;
+            _procedureExecutorMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms).Result, Times.Never());
         }
 
         [Test]
@@ -51,8 +52,8 @@ namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
             int userId = 30;
             int flagTypeId = 6;
             List<NpgsqlParameter> parms = new List<NpgsqlParameter> { };
-            _flagsService.CreateFlag(userId, flagTypeId, "", "Test", ids);
-            _mixerpContextMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, new CancellationToken()).Result, Times.Never());
+            var result = _flagsService.CreateFlag(userId, flagTypeId, "", "Test", ids).Result;
+            _procedureExecutorMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms).Result, Times.Never());
         }
 
         [Test]
@@ -67,11 +68,17 @@ namespace MixERP.Net.Tests.PgUnitTest.EF.CoreTests
             const string sql = "SELECT core.create_flag(@UserId, @FlagTypeId, @Resource, @ResourceKey, @ResourceId)";
             int userId = 30;
             int flagTypeId = 6;
-            List<NpgsqlParameter> parms = new List<NpgsqlParameter> { };
-            _mixerpContextMock.Setup(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms).Result).Returns(3);
-            _flagsService.CreateFlag(userId, flagTypeId, "Test", "Test", ids);
-            _mixerpContextMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms), Times.Once());
-            _mixerpContextMock.Setup(s => s.Database.CloseConnection());
+
+            List<NpgsqlParameter> parms = new List<NpgsqlParameter> {
+                    new NpgsqlParameter { ParameterName = "@UserId", Value = userId },
+                    new NpgsqlParameter { ParameterName = "@FlagTypeId", Value = flagTypeId },
+                    new NpgsqlParameter { ParameterName = "@Resource", Value = "Test" },
+                    new NpgsqlParameter { ParameterName = "@ResourceKey", Value = "Test" },
+                    new NpgsqlParameter { ParameterName = "@ResourceId", Value = 2 }};
+
+            _procedureExecutorMock.Setup(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms).Result).Returns(3);
+            var result = _flagsService.CreateFlag(userId, flagTypeId, "Test", "Test", ids).Result;
+            _procedureExecutorMock.Verify(s => s.ExecuteSqlRawAsync(_mixerpContextMock.Object, sql, parms), Times.Once());
         }
     }
 }

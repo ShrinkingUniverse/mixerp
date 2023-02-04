@@ -7,39 +7,43 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
     public class FlagsService : IFlagsService
     {
         private readonly IMixerpContext _mixerpContext;
-        public FlagsService(IMixerpContext mixerpContext)
+        private readonly IProcedureExecutor _procedureExecutor;
+        public FlagsService(IMixerpContext mixerpContext, IProcedureExecutor procedureExecutor)
         {
             _mixerpContext = mixerpContext; 
+            _procedureExecutor = procedureExecutor; 
         }
-        public void CreateFlag(int userId, int flagTypeId, string resourceName, string resourceKey,
+        public async Task<int> CreateFlag(int userId, int flagTypeId, string resourceName, string resourceKey,
             Collection<int> resourceIds)
         {
+            int rowCount = 0;
 
             if (userId <= 0)
             {
-                return;
+                return 0;
             }
 
             if (flagTypeId <= 0)
             {
-                return;
+                return 0;
             }
 
             if (string.IsNullOrWhiteSpace(resourceName))
             {
-                return;
+                return 0;
             }
 
             if (string.IsNullOrWhiteSpace(resourceKey))
             {
-                return;
+                return 0;
             }
 
             if (resourceIds == null)
             {
-                return;
+                return 0;
             }
             const string sql = "SELECT core.create_flag(@UserId, @FlagTypeId, @Resource, @ResourceKey, @ResourceId);";
+            
             foreach (int resourceId in resourceIds)
             {
                 List<NpgsqlParameter> parms = new List<NpgsqlParameter>
@@ -52,8 +56,9 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
                     new NpgsqlParameter { ParameterName = "@ResourceId", Value = resourceId }
 
                 };
-                    var accounts = _mixerpContext.ExecuteSqlRawAsync((MixerpContext)_mixerpContext, sql, parms);
+                rowCount = rowCount + await _procedureExecutor.ExecuteSqlRawAsync((MixerpContext)_mixerpContext, sql, parms);
             }
+            return rowCount;
         }
     }
 }
