@@ -1,6 +1,7 @@
 ﻿using MixERP.Net.DBFactory.EF.Context;
 using Npgsql;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace MixERP.Net.DatabaseLayer.EF.Core
 {
@@ -13,6 +14,12 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
             _mixerpContext = mixerpContext; 
             _procedureExecutor = procedureExecutor; 
         }
+        public async Task<int> RemoveFlagsFromDb()
+        {
+            const string sql = "DELETE FROM core.flags; ";
+            return await _procedureExecutor.ExecuteSqlRawAsync((MixerpContext)_mixerpContext, sql, new CancellationToken());
+        }
+
         public async Task<int> CreateFlag(int userId, int flagTypeId, string resourceName, string resourceKey,
             Collection<int> resourceIds)
         {
@@ -56,7 +63,8 @@ namespace MixERP.Net.DatabaseLayer.EF.Core
                     new NpgsqlParameter { ParameterName = "@ResourceId", Value = resourceId }
 
                 };
-                rowCount = rowCount + await _procedureExecutor.ExecuteSqlRawAsync((MixerpContext)_mixerpContext, sql, parms);
+                 var temp = await _procedureExecutor.ExecuteSqlRawAsync((MixerpContext)_mixerpContext, sql, parms);
+                rowCount++;
             }
             return rowCount;
         }
