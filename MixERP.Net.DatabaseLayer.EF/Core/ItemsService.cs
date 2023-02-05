@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace MixERP.Net.DatabaseLayer.Core
 {
-    public class ItemsService
+    public class ItemsService : IItemsService
     {
         private readonly IMixerpContext _mixerpContext;
         private readonly IProcedureExecutor _procedureExecutor;
@@ -31,7 +31,7 @@ namespace MixERP.Net.DatabaseLayer.Core
 
             string sql = "SELECT core.get_item_selling_price(@ItemId, @PartyTypeId, @PriceTypeId, @UnitId);";
 
-            List <NpgsqlParameter> parms = new List<NpgsqlParameter>
+            List<NpgsqlParameter> parms = new List<NpgsqlParameter>
                 { 
                     // Create parameters    
                     new NpgsqlParameter { ParameterName = "@ItemId", Value = itemId },
@@ -40,10 +40,10 @@ namespace MixERP.Net.DatabaseLayer.Core
                     new NpgsqlParameter { ParameterName = "@UnitId", Value = unitId },
                 };
 
-                result = _procedureExecutor.SqlQueryRaw<decimal>((MixerpContext)_mixerpContext, sql, parms)
-                                           .AsEnumerable().FirstOrDefault();
+            result = _procedureExecutor.SqlQueryRaw<decimal>((MixerpContext)_mixerpContext, sql, parms)
+                                       .AsEnumerable().FirstOrDefault();
 
-                return result;
+            return result;
 
         }
 
@@ -74,63 +74,63 @@ namespace MixERP.Net.DatabaseLayer.Core
 
         public decimal GetTaxRate(string itemCode)
         {
-            int itemTaxId = _mixerpContext.Items.Where(x => x.ItemCode == itemCode).Include(x => x.
-                                             .Select(x => x.TaxId)
+            return _mixerpContext.Items.Where(x => x.ItemCode == itemCode).Include(x => x.Tax)
+                                                .Select(c => c.Tax.Rate).FirstOrDefault();
+        }
+
+        public decimal CountItemInStock(string itemCode, int unitId, int storeId)
+        {
+            int itemId = _mixerpContext.Items.Where(x => x.ItemCode == itemCode)
+                                             .Select(x => x.ItemId)
+                                             .FirstOrDefault();
+            decimal result = 0;
+            const string sql = "SELECT core.count_item_in_stock(@ItemId, @UnitId, @StoreId);";
+
+            List<NpgsqlParameter> parms = new List<NpgsqlParameter>
+            {
+                new NpgsqlParameter { ParameterName = "@ItemId", Value = itemId },
+                new NpgsqlParameter { ParameterName = "@UnitId", Value = unitId },
+                new NpgsqlParameter { ParameterName = "@StoreId", Value = storeId },
+            };
+            result = _procedureExecutor.SqlQueryRaw<decimal>((MixerpContext)_mixerpContext, sql, parms)
+                                      .AsEnumerable().FirstOrDefault();
+
+            return result;
+        }
+
+        public decimal CountItemInStock(string itemCode, string unitName, int storeId)
+        {
+            int itemId = _mixerpContext.Items.Where(x => x.ItemCode == itemCode)
+                                             .Select(x => x.ItemId)
                                              .FirstOrDefault();
 
-            const string sql = "SELECT core.get_item_tax_rate(core.get_item_id_by_item_code(@ItemCode));";
-            using (NpgsqlCommand command = new NpgsqlCommand(sql))
+            int unitId = _mixerpContext.Units.Where(u => u.UnitName == unitName)
+                                             .Select(u => u.UnitId).FirstOrDefault();
+
+            decimal result = 0;
+            const string sql = "SELECT core.count_item_in_stock(@ItemId, @UnitId, @StoreId);";
+
+            List<NpgsqlParameter> parms = new List<NpgsqlParameter>
             {
-                command.Parameters.AddWithValue("@ItemCode", itemCode);
-                return Conversion.TryCastDecimal(DbOperations.GetScalarValue(command));
-            }
+                new NpgsqlParameter { ParameterName = "@ItemId", Value = itemId },
+                new NpgsqlParameter { ParameterName = "@UnitId", Value = unitId },
+                new NpgsqlParameter { ParameterName = "@StoreId", Value = storeId },
+            };
+            result = _procedureExecutor.SqlQueryRaw<decimal>((MixerpContext)_mixerpContext, sql, parms)
+                                      .AsEnumerable().FirstOrDefault();
+
+            return result;
         }
 
-        public static decimal CountItemInStock(string itemCode, int unitId, int storeId)
+        public bool IsStockItem(string itemCode)
         {
-            const string sql = "SELECT core.count_item_in_stock(core.get_item_id_by_item_code(@ItemCode), @UnitId, @StoreId);";
-            using (NpgsqlCommand command = new NpgsqlCommand(sql))
-            {
-                command.Parameters.AddWithValue("@ItemCode", itemCode);
-                command.Parameters.AddWithValue("@UnitId", unitId);
-                command.Parameters.AddWithValue("@StoreId", storeId);
-                return Conversion.TryCastDecimal(DbOperations.GetScalarValue(command));
-            }
-        }
-
-        public static decimal CountItemInStock(string itemCode, string unitName, int storeId)
-        {
-            const string sql = "SELECT core.count_item_in_stock(core.get_item_id_by_item_code(@ItemCode), core.get_unit_id_by_unit_name(@UnitName), @StoreId);";
-            using (NpgsqlCommand command = new NpgsqlCommand(sql))
-            {
-                command.Parameters.AddWithValue("@ItemCode", itemCode);
-                command.Parameters.AddWithValue("@UnitName", unitName);
-                command.Parameters.AddWithValue("@StoreId", storeId);
-                return Conversion.TryCastDecimal(DbOperations.GetScalarValue(command));
-            }
-        }
-
-        public static bool IsStockItem(string itemCode)
-        {
-            const string sql = "SELECT 1 FROM core.items WHERE item_code=@ItemCode AND maintain_stock=true;";
-            using (NpgsqlCommand command = new NpgsqlCommand(sql))
-            {
-                command.Parameters.AddWithValue("@ItemCode", itemCode);
-
-                return DbOperations.GetDataTable(command).Rows.Count.Equals(1);
-            }
+            return _mixerpContext.Items.Where(x => x.ItemCode == itemCode && x.MaintainStock == true) != null;
         }
 
 
-        public static string GetItemCodeByItemId(int itemId)
+        public string GetItemCodeByItemId(int itemId)
         {
-            const string sql = "SELECT item_code FROM core.items WHERE item_id=@ItemId;";
-            using (NpgsqlCommand command = new NpgsqlCommand(sql))
-            {
-                command.Parameters.AddWithValue("@ItemId", itemId);
-
-                return Conversion.TryCastString(DbOperations.GetScalarValue(command));
-            }
+            return _mixerpContext.Items.Where(i => i.ItemId == itemId).Select(i => i.ItemCode).FirstOrDefault() ?? "";
         }
     }
 }
