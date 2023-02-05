@@ -1,4 +1,5 @@
-﻿using MixERP.Net.DBFactory.EF.Context;
+﻿using MixERP.Net.DatabaseLayer.EF.Core.Interfaces;
+using MixERP.Net.DBFactory.EF.Context;
 using Npgsql;
 using System.Collections.ObjectModel;
 using System.Threading;

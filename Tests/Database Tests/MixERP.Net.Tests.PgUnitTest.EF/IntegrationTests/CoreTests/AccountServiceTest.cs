@@ -1,4 +1,5 @@
 ﻿using MixERP.Net.DatabaseLayer.EF.Core;
+using MixERP.Net.DatabaseLayer.EF.Core.Interfaces;
 using MixERP.Net.DBFactory.EF.Context;
 using Moq;
 using NUnit.Framework;

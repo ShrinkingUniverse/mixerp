@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MixERP.Net.DatabaseLayer.EF.Core.Interfaces;
 using MixERP.Net.DBFactory.EF.Context;
 using Npgsql;
 
@@ -18,7 +19,8 @@ namespace MixERP.Net.DatabaseLayer.Core
             return _mixerpContext.Items.Where(x => x.ItemCode == itemCode).FirstOrDefault() != null;
         }
 
-        public decimal GetItemSellingPrice(string itemCode, string partyCode, int priceTypeId, int unitId)
+        public decimal GetItemSellingPrice(string itemCode, string partyCode, int priceTypeId, 
+            int unitId)
         {
             int itemId = _mixerpContext.Items.Where(x => x.ItemCode == itemCode)
                                              .Select(x => x.ItemId)

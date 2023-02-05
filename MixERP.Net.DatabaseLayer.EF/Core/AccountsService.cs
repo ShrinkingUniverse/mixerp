@@ -1,4 +1,5 @@
-﻿using MixERP.Net.DBFactory.EF.Context;
+﻿using MixERP.Net.DatabaseLayer.EF.Core.Interfaces;
+using MixERP.Net.DBFactory.EF.Context;
 
 namespace MixERP.Net.DatabaseLayer.EF.Core
 {

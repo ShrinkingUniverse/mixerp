@@ -1,4 +1,4 @@
-﻿namespace MixERP.Net.DatabaseLayer.EF.Core
+﻿namespace MixERP.Net.DatabaseLayer.EF.Core.Interfaces
 {
     public interface IAccountsService
     {
