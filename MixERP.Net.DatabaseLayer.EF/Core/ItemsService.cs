@@ -29,23 +29,18 @@ namespace MixERP.Net.DatabaseLayer.Core
             int partyTypeId = _mixerpContext.Parties.Where(x => x.PartyCode == partyCode)
                                                     .Select(x => x.PartyTypeId)
                                                     .FirstOrDefault();
-            decimal result = 0;
+            decimal result2 = 0;
 
-            string sql = "SELECT core.get_item_selling_price(@ItemId, @PartyTypeId, @PriceTypeId, @UnitId);";
+            string sql = $"SELECT core.get_item_selling_price({itemId}, {partyTypeId}, {priceTypeId}, {unitId}) as Value";
 
-            List<NpgsqlParameter> parms = new List<NpgsqlParameter>
-                { 
-                    // Create parameters    
-                    new NpgsqlParameter { ParameterName = "@ItemId", Value = itemId },
-                    new NpgsqlParameter { ParameterName = "@PartyTypeId", Value = partyTypeId },
-                    new NpgsqlParameter { ParameterName = "@PriceTypeId", Value = priceTypeId },
-                    new NpgsqlParameter { ParameterName = "@UnitId", Value = unitId },
-                };
+            //using (var db = (MixerpContext)_mixerpContext)
+            //{
+            //    var accounts = db.Database.SqlQuery<decimal>(sql).FirstOrDefault();
+            //}
 
-            result = _procedureExecutor.SqlQueryRaw<decimal>((MixerpContext)_mixerpContext, sql, parms)
-                                       .AsEnumerable().FirstOrDefault();
-
-            return result;
+            var result = _procedureExecutor.QueryValue<decimal>((MixerpContext)_mixerpContext, sql, null);
+            return result2;
+            //return result;
 
         }
 
@@ -118,8 +113,8 @@ namespace MixERP.Net.DatabaseLayer.Core
                 new NpgsqlParameter { ParameterName = "@UnitId", Value = unitId },
                 new NpgsqlParameter { ParameterName = "@StoreId", Value = storeId },
             };
-            result = _procedureExecutor.SqlQueryRaw<decimal>((MixerpContext)_mixerpContext, sql, parms)
-                                      .AsEnumerable().FirstOrDefault();
+                result = _procedureExecutor.SqlQueryRaw<decimal>((MixerpContext)_mixerpContext, sql, parms)
+                                          .AsEnumerable().FirstOrDefault();
 
             return result;
         }

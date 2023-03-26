@@ -10,13 +10,13 @@ namespace MixERP.Net.Tests.PgTest.EF.IntegrationTests.CoreTests
     {
         private ItemsService _itemsService;
         private MixerpContext _mixerpContextMock;
-        private Mock<IProcedureExecutor> _procedureExecutorMock;
+        private ProcedureExecutor _procedureExecutorMock;
         [SetUp]
         public void Setup()
         {
             _mixerpContextMock = new MixerpContext();
-            _procedureExecutorMock = new Mock<IProcedureExecutor>();
-            _itemsService = new ItemsService(_mixerpContextMock, _procedureExecutorMock.Object);
+            _procedureExecutorMock = new ProcedureExecutor();
+            _itemsService = new ItemsService(_mixerpContextMock, _procedureExecutorMock);
         }
 
         [Test]
@@ -43,5 +43,16 @@ namespace MixERP.Net.Tests.PgTest.EF.IntegrationTests.CoreTests
             var result = _itemsService.GetItemSellingPrice(itemCode, partyCode, 1, 6);
 
         }
+
+        [Test]
+        public void GetItemCostPrice_ItemCode_Success()
+        {
+            string itemCode = "TestItem02";
+            string partyCode = "TETTE-0002";
+            var result = _itemsService.GetItemCostPrice(itemCode, partyCode, 6);
+
+        }
+
+        //GetItemCostPrice
     }
 }

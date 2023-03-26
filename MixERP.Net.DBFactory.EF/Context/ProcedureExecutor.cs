@@ -21,5 +21,17 @@ namespace MixERP.Net.DBFactory.EF.Context
         {
             return context.Database.SqlQueryRaw<TResult>(sql, parameters);
         }
+
+        public virtual IQueryable<TResult> SqlQuery<TResult>(MixerpContext context,
+        FormattableString sql)
+        {
+            return context.Database.SqlQuery<TResult>(sql);
+        }
+
+        public virtual TResult QueryValue<TResult>(MixerpContext context,
+        string sql, List<NpgsqlParameter> parameters)
+        {
+            return context.Database.SqlQueryRaw<TResult>(sql, parameters).FirstOrDefault();
+        }
     }
 }
